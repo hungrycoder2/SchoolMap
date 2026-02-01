@@ -1,12 +1,12 @@
 function addAllLayers() {
   // remove any leftover selected sources/layers first (safe re-add)
   const maybeRemove = id => {
-    if (map.getLayer(id)) try { map.removeLayer(id); } catch(e) {}
-    if (map.getSource(id)) try { map.removeSource(id); } catch(e) {}
+    if (map.getLayer(id)) try { map.removeLayer(id); } catch (e) { }
+    if (map.getSource(id)) try { map.removeSource(id); } catch (e) { }
   };
 
   // remove selected sources/layers so we can recreate them cleanly
-  ['country-selected','river-selected','strait-selected','lake-selected','sea-selected','city-selected'].forEach(maybeRemove);
+  ['country-selected', 'river-selected', 'strait-selected', 'lake-selected', 'sea-selected', 'city-selected'].forEach(maybeRemove);
 
   // COUNTRIES
   if (map.getSource('countries')) map.removeSource('countries');
@@ -136,8 +136,8 @@ function addAllLayers() {
       type: 'line',
       source: 'rivers',
       minzoom: 2,
-      paint: { 
-        'line-color': '#4cc9f0', 
+      paint: {
+        'line-color': '#4cc9f0',
         'line-width': 2,
         'line-opacity': [
           'interpolate', ['linear'], ['zoom'],
@@ -237,108 +237,108 @@ function addAllLayers() {
 
   // helper expression to find the population property from various possible names
   const popExpr = ['coalesce', ['get', 'POP_MAX'], ['get', 'pop_max'], ['get', 'POP_EST'], ['get', 'pop_est'], ['get', 'population'], 0];
-    
+
   const isCapital = ['any',
-  ['==', ['get', 'capital'], 1],
-  ['==', ['get', 'FEATURECLA'], 'Admin-0 capital'],
-  ['==', ['get', 'featurecla'], 'Admin-0 capital']
-];
+    ['==', ['get', 'capital'], 1],
+    ['==', ['get', 'FEATURECLA'], 'Admin-0 capital'],
+    ['==', ['get', 'featurecla'], 'Admin-0 capital']
+  ];
 
- // Capitals (visible very early)
-map.addLayer({
-  id: 'city-capitals',
-  type: 'circle',
-  source: 'cities',
-  minzoom: 2.5,
-  filter: isCapital,
-  paint: {
-    'circle-radius': ['interpolate', ['linear'], ['zoom'], 2, 5, 5, 9, 8, 14],
-    'circle-color': '#ff8b8b',
-    'circle-stroke-color': '#000',
-    'circle-stroke-width': 1
-  }
-});
+  // Capitals (visible very early)
+  map.addLayer({
+    id: 'city-capitals',
+    type: 'circle',
+    source: 'cities',
+    minzoom: 2.5,
+    filter: isCapital,
+    paint: {
+      'circle-radius': ['interpolate', ['linear'], ['zoom'], 2, 5, 5, 9, 8, 14],
+      'circle-color': '#ff8b8b',
+      'circle-stroke-color': '#000',
+      'circle-stroke-width': 1
+    }
+  });
 
-map.addLayer({
-  id: 'city-5m',
-  type: 'circle',
-  source: 'cities',
-  minzoom: 3,
-  filter: ['all',
-    ['>=', popExpr, 5000000],
-    ['!', isCapital]
-  ],
-  paint: {
-    'circle-radius': ['interpolate', ['linear'], ['zoom'], 3, 5, 6, 9],
-    'circle-color': '#ffd166',
-    'circle-stroke-color': '#000',
-    'circle-stroke-width': 1
-  }
-});
+  map.addLayer({
+    id: 'city-5m',
+    type: 'circle',
+    source: 'cities',
+    minzoom: 3,
+    filter: ['all',
+      ['>=', popExpr, 5000000],
+      ['!', isCapital]
+    ],
+    paint: {
+      'circle-radius': ['interpolate', ['linear'], ['zoom'], 3, 5, 6, 9],
+      'circle-color': '#ffd166',
+      'circle-stroke-color': '#000',
+      'circle-stroke-width': 1
+    }
+  });
 
-map.addLayer({
-  id: 'city-1m',
-  type: 'circle',
-  source: 'cities',
-  minzoom: 4.5,
-  filter: ['all',
-    ['>=', popExpr, 1000000],
-    ['<', popExpr, 5000000]
-  ],
-  paint: {
-    'circle-radius': ['interpolate', ['linear'], ['zoom'], 4, 4, 8, 8],
-    'circle-color': '#ffd166',
-    'circle-stroke-color': '#000',
-    'circle-stroke-width': 1
-  }
-});
+  map.addLayer({
+    id: 'city-1m',
+    type: 'circle',
+    source: 'cities',
+    minzoom: 4.5,
+    filter: ['all',
+      ['>=', popExpr, 1000000],
+      ['<', popExpr, 5000000]
+    ],
+    paint: {
+      'circle-radius': ['interpolate', ['linear'], ['zoom'], 4, 4, 8, 8],
+      'circle-color': '#ffd166',
+      'circle-stroke-color': '#000',
+      'circle-stroke-width': 1
+    }
+  });
 
-map.addLayer({
-  id: 'city-500k',
-  type: 'circle',
-  source: 'cities',
-  minzoom: 6,
-  filter: ['all',
-    ['>=', popExpr, 500000],
-    ['<', popExpr, 1000000]
-  ],
-  paint: {
-    'circle-radius': ['interpolate', ['linear'], ['zoom'], 5, 3, 9, 6],
-    'circle-color': '#ffd166',
-    'circle-stroke-color': '#000',
-    'circle-stroke-width': 1
-  }
-});
+  map.addLayer({
+    id: 'city-500k',
+    type: 'circle',
+    source: 'cities',
+    minzoom: 6,
+    filter: ['all',
+      ['>=', popExpr, 500000],
+      ['<', popExpr, 1000000]
+    ],
+    paint: {
+      'circle-radius': ['interpolate', ['linear'], ['zoom'], 5, 3, 9, 6],
+      'circle-color': '#ffd166',
+      'circle-stroke-color': '#000',
+      'circle-stroke-width': 1
+    }
+  });
 
-map.addLayer({
-  id: 'city-100k',
-  type: 'circle',
-  source: 'cities',
-  minzoom: 7,
-  filter: ['all',
-    ['>=', popExpr, 100000],
-    ['<', popExpr, 500000]
-  ],
-  paint: {
-    'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2, 10, 4],
-    'circle-color': '#ffd166',
-    'circle-stroke-color': '#000',
-    'circle-stroke-width': 0.8
-  }
-});
+  map.addLayer({
+    id: 'city-100k',
+    type: 'circle',
+    source: 'cities',
+    minzoom: 7,
+    filter: ['all',
+      ['>=', popExpr, 100000],
+      ['<', popExpr, 500000]
+    ],
+    paint: {
+      'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2, 10, 4],
+      'circle-color': '#ffd166',
+      'circle-stroke-color': '#000',
+      'circle-stroke-width': 0.8
+    }
+  });
 
-map.addLayer({
-  id: 'city-small',
-  type: 'circle',
-  source: 'cities',
-  minzoom: 9,
-  paint: {
-    'circle-radius': ['interpolate', ['linear'], ['zoom'], 9, 2, 14, 4],
-    'circle-color': '#ffd166',
-    'circle-stroke-color': '#000',
-    'circle-stroke-width': 0.6
-  }
-});
+  map.addLayer({
+    id: 'city-small',
+    type: 'circle',
+    source: 'cities',
+    minzoom: 9,
+    paint: {
+      'circle-radius': ['interpolate', ['linear'], ['zoom'], 9, 2, 14, 4],
+      'circle-color': '#ffd166',
+      'circle-stroke-color': '#000',
+      'circle-stroke-width': 0.6
+    }
+  });
 
 
   // labels for major cities at low zooms (capitals included)
@@ -348,7 +348,7 @@ map.addLayer({
       type: 'symbol',
       source: 'cities',
       minzoom: 3,
-      filter: ['any', ['>=', popExpr, 5000000], ['==', ['get', 'capital'], 1], ['==', ['get', 'FEATURECLA'], 'Admin-0 capital'] ],
+      filter: ['any', ['>=', popExpr, 5000000], ['==', ['get', 'capital'], 1], ['==', ['get', 'FEATURECLA'], 'Admin-0 capital']],
       layout: { 'text-field': ['coalesce', ['get', 'name'], ['get', 'name_en']], 'text-size': 12, 'text-offset': [0, 1.0] },
       paint: { 'text-color': '#fff', 'text-halo-color': '#000', 'text-halo-width': 1 }
     });
@@ -399,16 +399,16 @@ map.addLayer({
 
   // Move layers so selected glows are visible above everything else
   const order = [
-    'country-selected-glow','country-hit','country-fill',
-    'river-selected-glow','river-hit','river-line',
-    'strait-selected-glow','strait-hit',
-    'sea-selected-glow','sea-hit','sea-fill',
-    'lake-selected-glow','lake-hit','lake-fill',
-    'city-selected-circle','city-hit','city-capitals','city-capitals-symbol','city-major','city-1m','city-500k','city-100k','city-small','city-labels-major','city-labels'
+    'country-selected-glow', 'country-hit', 'country-fill',
+    'river-selected-glow', 'river-hit', 'river-line',
+    'strait-selected-glow', 'strait-hit',
+    'sea-selected-glow', 'sea-hit', 'sea-fill',
+    'lake-selected-glow', 'lake-hit', 'lake-fill',
+    'city-selected-circle', 'city-hit', 'city-capitals', 'city-capitals-symbol', 'city-major', 'city-1m', 'city-500k', 'city-100k', 'city-small', 'city-labels-major', 'city-labels'
   ];
   order.forEach(id => {
     if (map.getLayer(id)) {
-      try { map.moveLayer(id); } catch (e) {}
+      try { map.moveLayer(id); } catch (e) { }
     }
   });
 }

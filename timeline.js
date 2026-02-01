@@ -261,8 +261,31 @@ class TimelineEngine {
 
 // Initialize timeline when map loads
 let timelineEngine;
+let mapHistoryLayer;
+let historicalEventService;
+
 map.on('load', () => {
+  // Services
+  historicalEventService = new HistoricalEventService();
+  mapHistoryLayer = new MapHistoryLayer(map, historicalEventService);
+  mapHistoryLayer.init();
+
+  // Timeline
   timelineEngine = new TimelineEngine(map);
+
+  // Connect Timeline with History Layer
+  // We override or hook into setYear to update history
+  const originalSetYear = timelineEngine.setYear.bind(timelineEngine);
+  timelineEngine.setYear = function (year) {
+    originalSetYear(year);
+
+    // Update history layer
+    // We need the full set of events currently loaded. 
+    // We'll store them in timelineEngine for now or manage via global state.
+    if (timelineEngine.loadedEvents) {
+      mapHistoryLayer.updateYear(year, timelineEngine.loadedEvents);
+    }
+  };
 });
 
 // Export for external use
